@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertion Sort – Playlist-Sortierung [Visualisiert]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS Bereich: Modernes, dunkles Design (Spotify-Akzente) --- */
+        
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #191414;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid #1db954; /* Spotify Grün Akzent */
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 3.2em;
+            color: #1db954;
+            letter-spacing: 3px;
+            margin: 0;
+        }
+
+        .subtitle {
+            color: #ccc;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            color: #00bcd4; /* Türkis Akzent */
+            border-bottom: 2px solid #00bcd4;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        /* Hervorhebungen und Notizen */
+        .note {
+            background-color: #3a3a3a;
+            padding: 15px;
+            border-left: 5px solid #1db954;
+            margin-top: 30px;
+            color: #fff;
+        }
+
+        /* Sortierbereich mit visueller Trennung */
+        #sorting-process {
+            background-color: #242424;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+        }
+        
+        .initial-block {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border: 1px solid #00bcd4;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .initial-array {
+            font-size: 1.4em;
+            color: #ffd700;
+            font-weight: bold;
+            display: block;
+            margin-top: 5px;
+        }
+        
+        /* Visuelle Darstellung der Sortierschritte */
+        .array-step {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.2em;
+            padding: 8px 0;
+            margin-bottom: 5px;
+            border-left: 3px solid #1db954;
+            padding-left: 10px;
+        }
+
+        /* Styling für den sortierten Teil */
+        .sorted-part {
+            color: #1db954; /* Grün */
+            font-weight: bold;
+        }
+
+        /* Styling für den unsortierten Teil */
+        .unsorted-part {
+            color: #ccc; /* Hellgrau */
+        }
+        
+        /* Styling für die Trennlinie */
+        .separator {
+            color: #ffd700; /* Gelb */
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        /* Liste der Sortieraktionen */
+        .sort-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 25px;
+        }
+
+        .sort-list li {
+            background-color: #1a1a1a;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #00bcd4;
+        }
+
+        .sort-list strong {
+            color: #ffd700;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #1db954;
+            color: #1a1a1a;
+            font-weight: bold;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        /* Tabelle für Komplexität (unverändert) */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9em;
+            background-color: #242424;
+        }
+        th, td { border: 1px solid #3a3a3a; padding: 12px 15px; text-align: left; }
+        th { background-color: #00bcd4; color: #1a1a1a; text-transform: uppercase; }
+        tr:nth-child(even) { background-color: #282828; }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(29, 185, 84, 0), rgba(29, 185, 84, 0.75), rgba(29, 185, 84, 0));
+            margin: 50px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background-color: #191414;
+            border-top: 2px solid #00bcd4;
+            margin-top: 50px;
+            font-size: 0.8em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎧 PLAYLIST ALGO SORT 🥇</h1>
+        <p class="subtitle">Insertion Sort: Perfektioniere deine meistgehörte Liste</p>
+    </header>
+
+    <main>
+        <section id="insertion-sort-intro">
+            <h2>🔍 Das Sortier-Prinzip: Sortieren von Songs auf Spotify</h2>
+            <p>
+                Der <b>Insertion Sort</b> teilt deine Playlist in einen <b>sortierten (links)</b> und einen <b>unsortierten (rechts)</b> Teil. Das Ziel ist es, die Songs aus dem unsortierten Teil einzeln zu nehmen und an die korrekte Position im sortierten Teil einzufügen.
+            </p>
+        </section>
+
+        <hr>
+
+        <section id="sorting-process">
+            <h2>⚙️ Visuelle Darstellung der Sortierung (Aufsteigend)</h2>
+            <p>
+                Wir sortieren aufsteigend (kleinste Zahl zuerst) basierend auf dem Beliebtheits-Score. Die unsortierte Startliste ist: [3, 7, 9, 5].
+            </p>
+
+            <div class="initial-block">
+                <b>Initialisierung:</b> Die erste Zahl bildet die sortierte Teilliste.
+                <div class="array-step">
+                    <span class="sorted-part">[3</span><span class="separator">|</span><span class="unsorted-part">7, 9, 5]</span>
+                </div>
+            </div>
+
+            <ul class="sort-list">
+                <li>
+                     Nimm den Score **7**. Vergleiche ihn mit der sortierten Teilliste **[3]**. Da 7 &gt; 3 ist, wird 7 direkt rechts eingefügt, da es seine korrekte Position in Bezug auf 3 bereits hat.
+                    <div class="array-step">
+                        <span class="sorted-part">[3, 7</span><span class="separator">|</span><span class="unsorted-part">9, 5]</span>
+                    </div>
+                </li>
+                <li>
+                     Nimm den Score **9**. Vergleiche ihn mit der sortierten Teilliste **[3, 7]**. Da 9 &gt; 7 ist, ist 9 an der korrekten Position und wird rechts eingefügt.
+                    <div class="array-step">
+                        <span class="sorted-part">[3, 7, 9</span><span class="separator">|</span><span class="unsorted-part">5]</span>
+                    </div>
+                </li>
+                <li>
+                     Nimm den Score **5**. Vergleiche ihn rückwärts durch **[3, 7, 9]**. 5 ist kleiner als 9 und 7; diese werden nach rechts verschoben. 5 ist größer als 3 und wird deshalb vor 7 eingefügt.
+                    <div class="array-step">
+                        <span class="sorted-part">[3, 5, 7, 9</span><span class="separator">|</span><span class="unsorted-part">]</span>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="result">
+                ✅ Fertige Playlist (Aufsteigend sortiert): **3, 5, 7, 9**
+            </div>
+        </section>
+
+        <hr>
+
+        <section id="complexity">
+            <h2>⏳ Zeitkomplexität: Die Performance</h2>
+            <p>
+                Die Effizienz des Insertion Sort wird durch die Big-O-Notation beschrieben, die die Laufzeit $T$ in Abhängigkeit von der Anzahl der Songs $n$ angibt.
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fall</th>
+                        <th>Komplexität (Laufzeit)</th>
+                        <th>Bedeutung für die Playlist</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Best Case</td>
+                        <td>O(n)</td>
+                        <td>Die Songs sind bereits perfekt sortiert.</td>
+                    </tr>
+                    <tr>
+                        <td>Worst Case</td>
+                        <td>O(n^2)</td>
+                        <td>Die Songs sind genau umgekehrt sortiert (z.B. die beliebtesten vorne).</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="highlight-text">
+                Tipp: Insertion Sort ist ideal, wenn du eine kleine Liste sortierst oder eine große Liste, die nur leicht unsortiert ist.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 PLAYLIST ALGO SORT | Algorithmen rocken.</p>
+    </footer>
+</body>
+</html>
